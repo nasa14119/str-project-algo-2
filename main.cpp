@@ -35,7 +35,7 @@ public:
 };
 class Transmition
 {
-  void print_found_comoun(const Transmition &transmision, string &prefix, size_t found_index) const
+  void print_found_common(const Transmition &transmision, string &prefix, size_t found_index) const
   {
     cout << "The longest substring found was ";
     cout << "`" << prefix << "`";
@@ -66,7 +66,7 @@ public:
   {
     string pattern;
     size_t start_index;
-    print_found_comoun(transmision, pattern, start_index + 1);
+    print_found_common(transmision, pattern, start_index + 1);
   }
 };
 int main()
