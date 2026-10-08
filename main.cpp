@@ -74,6 +74,13 @@ public:
     cout << endl;
   }
 
+  //Manacher
+  void check_palindrome() const
+  {
+    const auto [start, length] = mancher(data);
+    cout << start + 1 << " " << start + length << endl;
+  }
+
   //Search the largest substring in the transmition
   void check_sufix(const Transmition &transmision) const
   {

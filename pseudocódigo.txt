@@ -1,0 +1,107 @@
+FUNCIÓN LeerArchivo(ruta)
+    Abrir archivo en la ruta indicada
+    contenido ← ""
+
+    MIENTRAS exista una línea por leer
+        contenido ← contenido + línea
+    FIN MIENTRAS
+
+    Cerrar archivo
+    RETORNAR contenido
+FIN FUNCIÓN
+
+
+CLASE Mcode
+    ATRIBUTOS: nombre, contenido
+
+    CONSTRUCTOR(nombreArchivo, ruta)
+        nombre ← nombreArchivo
+        contenido ← LeerArchivo(ruta)
+    FIN CONSTRUCTOR
+FIN CLASE
+
+
+CLASE Transmition
+    ATRIBUTOS: nombre, datos
+
+    CONSTRUCTOR(nombreArchivo, ruta)
+        nombre ← nombreArchivo
+        datos ← LeerArchivo(ruta)
+    FIN CONSTRUCTOR
+
+
+    PROCEDIMIENTO BuscarCodigo(codigo)
+        (encontrado, posición) ← Z_Function(datos, codigo.contenido)
+
+        SI encontrado
+            Mostrar que el código fue encontrado
+            Mostrar nombre del código, transmisión y posición
+        SINO
+            Mostrar que el código no fue encontrado
+        FIN SI
+    FIN PROCEDIMIENTO
+
+
+    PROCEDIMIENTO BuscarPalindromo()
+        (inicio, longitud) ← Manacher(datos)
+
+        Mostrar (inicio + 1), espacio, (inicio + longitud)
+    FIN PROCEDIMIENTO
+
+
+    PROCEDIMIENTO BuscarSubcadenaComun(otraTransmision)
+        SI datos = otraTransmision.datos
+            Mostrar toda la cadena como subcadena común
+            TERMINAR PROCEDIMIENTO
+        FIN SI
+
+        longitud ← tamaño(datos)
+
+        MIENTRAS longitud > 0
+            PARA inicio ← 0 HASTA tamaño(datos) - longitud
+                patrón ← extraer subcadena(datos, inicio, longitud)
+
+                (encontrado, posición) ←
+                    Z_Function(otraTransmision.datos, patrón)
+
+                SI encontrado
+                    Mostrar patrón y posición encontrada + 1
+                    TERMINAR PROCEDIMIENTO
+                FIN SI
+            FIN PARA
+
+            longitud ← longitud - 1
+        FIN MIENTRAS
+    FIN PROCEDIMIENTO
+FIN CLASE
+
+
+PROGRAMA PRINCIPAL
+    directorio ← "test"
+    transmisiones ← lista vacía
+    codigos ← lista vacía
+
+    PARA CADA archivo EN directorio
+        SI nombre coincide con "mcode{número}.txt"
+            Agregar nuevo Mcode(nombre, ruta) a codigos
+
+        SINO SI nombre coincide con "transmission{número}.txt"
+            Agregar nueva Transmition(nombre, ruta) a transmisiones
+        FIN SI
+    FIN PARA
+
+    PARA CADA transmision EN transmisiones
+        PARA CADA codigo EN codigos
+            transmision.BuscarCodigo(codigo)
+        FIN PARA
+    FIN PARA
+
+    PARA CADA transmision EN transmisiones
+        transmision.BuscarPalindromo()
+    FIN PARA
+
+    SI hay al menos dos transmisiones
+        transmisiones[0].BuscarSubcadenaComun(transmisiones[1])
+        transmisiones[1].BuscarSubcadenaComun(transmisiones[0])
+    FIN SI
+FIN PROGRAMA
