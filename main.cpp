@@ -14,8 +14,11 @@
 #include <regex>
 #include "z_function.cpp"
 
+
 using std::string, std::ifstream, std::vector, std::cout, std::endl, std::regex_match, std::regex, std::pair, std::setw, std::left;
 namespace fs = std::filesystem;
+
+//Reed the file, add each file without the espaces and end lines 
 string getStringFile(const string &path)
 {
   ifstream file(path);
@@ -27,12 +30,16 @@ string getStringFile(const string &path)
   file.close();
   return data;
 }
+
+//Search in transmitions and saves the name and the content
 class Mcode
 {
 public:
   string name = "", content = "";
   Mcode(const string &name, const string &path) : name(name), content(getStringFile(path)) {};
 };
+
+//Analize the transmition
 class Transmition
 {
   void print_found_common(const Transmition &transmision, const string &prefix, const size_t found_index) const
@@ -47,9 +54,13 @@ class Transmition
     cout << endl;
   }
 
+
 public:
+  //Save the name and load the data 
   string name = "", data = "";
   Transmition(const string &name, const string &path) : name(name), data(getStringFile(path)) {}
+
+  //Search the pattern and the position only if it conteins a value 
   void check_mcode(const Mcode &mcode) const
   {
     auto [isFound, position] = z_funtion(data, mcode.content);
@@ -62,6 +73,8 @@ public:
     }
     cout << endl;
   }
+
+  //Search the largest substring in the transmition
   void check_sufix(const Transmition &transmision) const
   {
     if (transmision.data == data)
@@ -88,6 +101,11 @@ public:
     cout << "There is not common substring bewtween files" << endl;
   }
 };
+
+
+
+
+
 int main()
 {
   const string dir = "test";
@@ -116,6 +134,8 @@ int main()
       transition.check_mcode(mcode);
     }
   }
+
+  //Compare the first two transmitions 
   transmitions[0].check_sufix(transmitions[1]);
   transmitions[1].check_sufix(transmitions[0]);
   return 0;
