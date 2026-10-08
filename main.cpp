@@ -35,7 +35,7 @@ public:
 };
 class Transmition
 {
-  void print_found_common(const Transmition &transmision, string &prefix, size_t found_index) const
+  void print_found_common(const Transmition &transmision, const string &prefix, const size_t found_index) const
   {
     cout << "The longest substring found was ";
     cout << "`" << prefix << "`";
@@ -64,9 +64,28 @@ public:
   }
   void check_sufix(const Transmition &transmision) const
   {
-    string pattern;
-    size_t start_index;
-    print_found_common(transmision, pattern, start_index + 1);
+    if (transmision.data == data)
+    {
+      print_found_common(transmision, data, 0);
+      return;
+    }
+    int n = data.size() + 1;
+    while (n > 0)
+    {
+      for (size_t l = 0; l + n <= data.size(); l++)
+      {
+        string pattern = data.substr(l, n);
+
+        auto [isFound, pos] = z_funtion(transmision.data, pattern);
+        if (isFound)
+        {
+          print_found_common(transmision, pattern, pos.value() + 1);
+          return;
+        }
+      }
+      n--;
+    }
+    cout << "There is not common substring bewtween files" << endl;
   }
 };
 int main()
