@@ -13,12 +13,12 @@
 #include <vector>
 #include <regex>
 #include "z_function.cpp"
-
+#include "manacher.cpp"
 
 using std::string, std::ifstream, std::vector, std::cout, std::endl, std::regex_match, std::regex, std::pair, std::setw, std::left;
 namespace fs = std::filesystem;
 
-//Reed the file, add each file without the espaces and end lines 
+// Reed the file, add each file without the espaces and end lines
 string getStringFile(const string &path)
 {
   ifstream file(path);
@@ -31,7 +31,7 @@ string getStringFile(const string &path)
   return data;
 }
 
-//Search in transmitions and saves the name and the content
+// Search in transmitions and saves the name and the content
 class Mcode
 {
 public:
@@ -39,7 +39,7 @@ public:
   Mcode(const string &name, const string &path) : name(name), content(getStringFile(path)) {};
 };
 
-//Analize the transmition
+// Analize the transmition
 class Transmition
 {
   void print_found_common(const Transmition &transmision, const string &prefix, const size_t found_index) const
@@ -54,13 +54,12 @@ class Transmition
     cout << endl;
   }
 
-
 public:
-  //Save the name and load the data 
+  // Save the name and load the data
   string name = "", data = "";
   Transmition(const string &name, const string &path) : name(name), data(getStringFile(path)) {}
 
-  //Search the pattern and the position only if it conteins a value 
+  // Search the pattern and the position only if it conteins a value
   void check_mcode(const Mcode &mcode) const
   {
     auto [isFound, position] = z_funtion(data, mcode.content);
@@ -74,14 +73,14 @@ public:
     cout << endl;
   }
 
-  
   void check_palindrome() const
   {
-    const auto [start, length] = mancher(data);
-    cout << start + 1 << " " << start + length << endl;
+    const auto [start, length] = manacher(data);
+    cout << name << " longest palidrome: " << data.substr(start, length) << "\n";
+    cout << "From:" << start + 1 << " to " << start + length << endl;
   }
 
-  //Search the largest substring in the transmition
+  // Search the largest substring in the transmition
   void check_sufix(const Transmition &transmision) const
   {
     if (transmision.data == data)
@@ -109,19 +108,17 @@ public:
   }
 };
 
-
-
-
-
 int main()
 {
-  const string dir = "test";
   vector<Transmition> transmitions;
   vector<Mcode> mcodes;
+  // Reads directory ./test
+  const string dir = "test";
   for (const auto &entry : fs::directory_iterator(dir))
   {
     const auto &path = entry.path();
     const string &filename = path.filename().string();
+    // finds exact mcode{num}.txt files
     if (regex_match(filename, regex("mcode\\d+\\.txt")))
     {
       mcodes.emplace_back(filename, path);
@@ -134,6 +131,8 @@ int main()
       continue;
     }
   }
+  cout << "PART 1" << endl;
+  // Check mcodes group by transmitions
   for (const auto &transition : transmitions)
   {
     for (const auto &mcode : mcodes)
@@ -141,8 +140,16 @@ int main()
       transition.check_mcode(mcode);
     }
   }
-
-  //Compare the first two transmitions 
+  cout << "\n\n"
+       << "PART 2" << endl;
+  for (const auto &transimision : transmitions)
+  {
+    transimision.check_palindrome();
+    cout << endl;
+  }
+  cout << "\n\n"
+       << "PART 3" << endl;
+  // Compare the first two transmitions
   transmitions[0].check_sufix(transmitions[1]);
   transmitions[1].check_sufix(transmitions[0]);
   return 0;
