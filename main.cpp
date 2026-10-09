@@ -30,7 +30,7 @@ string getStringFile(const string &path) {
   return data;
 }
 
-// Search in transmitions and saves the name and the content
+// Search in transmissions and saves the name and the content
 class Mcode {
 public:
   string name = "", content = "";
@@ -38,9 +38,9 @@ public:
       : name(name), content(getStringFile(path)) {};
 };
 
-// Analize the transmition
-class Transmition {
-  void print_found_common(const Transmition &transmision, const string &prefix,
+// Analize the transmission
+class Transmission {
+  void print_found_common(const Transmission &transmision, const string &prefix,
                           const size_t found_index) const {
     cout << "The longest substring found was ";
     cout << "`" << prefix << "`";
@@ -55,7 +55,7 @@ class Transmition {
 public:
   // Save the name and load the data
   string name = "", data = "";
-  Transmition(const string &name, const string &path)
+  Transmission(const string &name, const string &path)
       : name(name), data(getStringFile(path)) {}
 
   // Search the pattern and the position only if it conteins a value
@@ -77,8 +77,8 @@ public:
     cout << "From:" << start + 1 << " to " << start + length << endl;
   }
 
-  // Search the largest substring in the transmition
-  void check_sufix(const Transmition &transmision) const {
+  // Search the largest substring in the transmission
+  void check_sufix(const Transmission &transmision) const {
     if (transmision.data == data) {
       print_found_common(transmision, data, 0);
       return;
@@ -101,7 +101,7 @@ public:
 };
 
 int main() {
-  vector<Transmition> transmitions;
+  vector<Transmission> transmissions;
   vector<Mcode> mcodes;
   // Reads directory ./test
   const string dir = "test";
@@ -115,27 +115,27 @@ int main() {
     }
     // making sure is only the one with the correct prefix
     if (regex_match(filename, regex("transmission\\d+\\.txt"))) {
-      transmitions.emplace_back(filename, path);
+      transmissions.emplace_back(filename, path);
       continue;
     }
   }
   cout << "PART 1" << endl;
-  // Check mcodes group by transmitions
-  for (const auto &transition : transmitions) {
+  // Check mcodes group by transmissions
+  for (const auto &transition : transmissions) {
     for (const auto &mcode : mcodes) {
       transition.check_mcode(mcode);
     }
   }
   cout << "\n\n"
        << "PART 2" << endl;
-  for (const auto &transimision : transmitions) {
+  for (const auto &transimision : transmissions) {
     transimision.check_palindrome();
     cout << endl;
   }
   cout << "\n\n"
        << "PART 3" << endl;
-  // Compare the first two transmitions
-  transmitions[0].check_sufix(transmitions[1]);
-  transmitions[1].check_sufix(transmitions[0]);
+  // Compare the first two transmissions
+  transmissions[0].check_sufix(transmissions[1]);
+  transmissions[1].check_sufix(transmissions[0]);
   return 0;
 }

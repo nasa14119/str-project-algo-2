@@ -1,107 +1,107 @@
-FUNCIÓN LeerArchivo(ruta)
-    Abrir archivo en la ruta indicada
-    contenido ← ""
+FUNCTION ReadFile(path)
+    Open file of the given path
+    str content =  ""
 
-    MIENTRAS exista una línea por leer
-        contenido ← contenido + línea
-    FIN MIENTRAS
+    WHILE lines in file
+        content += line
+    END WHILE
 
-    Cerrar archivo
-    RETORNAR contenido
-FIN FUNCIÓN
+    Close file
+    RETURN content
+END FUNCTION
 
 
-CLASE Mcode
-    ATRIBUTOS: nombre, contenido
+CLASS Mcode
+    ATTRIBUTES: name, content
 
-    CONSTRUCTOR(nombreArchivo, ruta)
-        nombre ← nombreArchivo
-        contenido ← LeerArchivo(ruta)
-    FIN CONSTRUCTOR
+    CONSTRUCTOR(fileName, path)
+        nombre = fileName
+        content = ReadFile(path)
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Transmission
+    ATTRIBUTES: name, content
+
+    CONSTRUCTOR(fileName, path)
+        name = fileName
+        content = ReadFile(path)
+    END CONSTRUCTOR
+
+
+    METHOD SearchCode(mcode)
+        (isFound, position) = Z_Function(content, mcode.content)
+
+        IF isFound
+            OUT code mcode.name, transimission and position
+        ELSE
+            OUT the code was not found
+        END IF
+    END METHOD
+
+
+    METHOD SearchPalindrome()
+        (start, length) ← Manacher(content)
+
+        OUT `(start + 1) (inicio + length)`
+    FIN METHOD
+
+
+    METHOD SearchCommonSubstring(otherTranssmision)
+        if content = otherTranssmision.content
+            OUT this content
+            RETURN METHOD
+        END IF
+
+        length = content.size() - 1
+
+        WHILE length > 0
+
+            FOR start = 0, start < content.size() - length
+                pattern = extract substring(content, start to length)
+
+                (isFound, position) =
+                    Z_Function(otraTransmission.content, pattern)
+
+                IF isFound
+                    OUT pattern and position index + 1
+                    RETURN METHOD
+                END IF
+            END FOR
+
+            length = length - 1
+        END WHILE
+    END METHOD
 FIN CLASE
 
 
-CLASE Transmition
-    ATRIBUTOS: nombre, datos
+MAIN PROGRAM
+    directory = "test"
+    transmissions = []
+    mcodes = []
 
-    CONSTRUCTOR(nombreArchivo, ruta)
-        nombre ← nombreArchivo
-        datos ← LeerArchivo(ruta)
-    FIN CONSTRUCTOR
+    FOR EACH fileName in directory
+        IF name match with "mcode{número}.txt"
+            ADD new Mcode(fileName, path) to mcodes
 
-
-    PROCEDIMIENTO BuscarCodigo(codigo)
-        (encontrado, posición) ← Z_Function(datos, codigo.contenido)
-
-        SI encontrado
-            Mostrar que el código fue encontrado
-            Mostrar nombre del código, transmisión y posición
-        SINO
-            Mostrar que el código no fue encontrado
-        FIN SI
-    FIN PROCEDIMIENTO
-
-
-    PROCEDIMIENTO BuscarPalindromo()
-        (inicio, longitud) ← Manacher(datos)
-
-        Mostrar (inicio + 1), espacio, (inicio + longitud)
-    FIN PROCEDIMIENTO
-
-
-    PROCEDIMIENTO BuscarSubcadenaComun(otraTransmision)
-        SI datos = otraTransmision.datos
-            Mostrar toda la cadena como subcadena común
-            TERMINAR PROCEDIMIENTO
-        FIN SI
-
-        longitud ← tamaño(datos)
-
-        MIENTRAS longitud > 0
-            PARA inicio ← 0 HASTA tamaño(datos) - longitud
-                patrón ← extraer subcadena(datos, inicio, longitud)
-
-                (encontrado, posición) ←
-                    Z_Function(otraTransmision.datos, patrón)
-
-                SI encontrado
-                    Mostrar patrón y posición encontrada + 1
-                    TERMINAR PROCEDIMIENTO
-                FIN SI
-            FIN PARA
-
-            longitud ← longitud - 1
-        FIN MIENTRAS
-    FIN PROCEDIMIENTO
-FIN CLASE
-
-
-PROGRAMA PRINCIPAL
-    directorio ← "test"
-    transmisiones ← lista vacía
-    codigos ← lista vacía
-
-    PARA CADA archivo EN directorio
-        SI nombre coincide con "mcode{número}.txt"
-            Agregar nuevo Mcode(nombre, ruta) a codigos
-
-        SINO SI nombre coincide con "transmission{número}.txt"
-            Agregar nueva Transmition(nombre, ruta) a transmisiones
+        ELSE IF fileName match "transmission{número}.txt"
+            ADD new Tranmission(fileName, path) to transmissions
         FIN SI
     FIN PARA
 
-    PARA CADA transmision EN transmisiones
-        PARA CADA codigo EN codigos
-            transmision.BuscarCodigo(codigo)
-        FIN PARA
-    FIN PARA
+    FOR EACH transmission in transmissions
+        FOR EACH mcode in mcodes
+            transmission.SearchCode(mcode)
+        END FOR
+    END FOR
 
-    PARA CADA transmision EN transmisiones
-        transmision.BuscarPalindromo()
-    FIN PARA
+    FOR EACH transmission in transmissions
+        transmission.SearchPalindrome()
+    END FOR
 
-    SI hay al menos dos transmisiones
-        transmisiones[0].BuscarSubcadenaComun(transmisiones[1])
-        transmisiones[1].BuscarSubcadenaComun(transmisiones[0])
-    FIN SI
-FIN PROGRAMA
+    IF at least two transmissions
+        transmissions[0].SearchCommonSubstring(transmissions[1])
+        transmissions[1].SearchCommonSubstring(transmissions[0])
+    END IF
+END MAIN
