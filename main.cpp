@@ -16,7 +16,7 @@
 #include <vector>
 
 using std::string, std::ifstream, std::vector, std::cout, std::endl,
-    std::regex_match, std::regex, std::pair, std::setw, std::left;
+    std::regex_match, std::regex, std::setw, std::left;
 namespace fs = std::filesystem;
 
 // Reed the file, add each file without the espaces and end lines
