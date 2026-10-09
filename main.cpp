@@ -65,7 +65,7 @@ public:
     cout << mcode.name << " in ";
     cout << name << " file ";
     if (position.has_value()) {
-      cout << "patter in possition " << position.value();
+      cout << "pattern in possition " << position.value();
     }
     cout << endl;
   }
